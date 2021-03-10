@@ -30,11 +30,11 @@ Train and predict label on sleep stages
 - Cross-use validation, lecture 5; take a look there! If ML works on every user, 8 users for training, 2 for test.
 '''
 
-df = pd.read_excel('./1_2.xlsx')
+df1 = pd.read_excel('./1_2.xlsx')
 
-print("\n\nRaw dataframe:\n")
-print(df)
-print(df["HR"][0][0:2].strip()) # This gives first 3 chars without spaces- our heart rate without words attached to it.
+# print("\n\nRaw dataframe:\n")
+# print(df)
+# print(df["HR"][0][0:2].strip()) # This gives first 3 chars without spaces- our heart rate without words attached to it.
 
 def clean_heartrate(hr):
     # Clean away footnotes
@@ -58,27 +58,6 @@ def normalize_column_z(values):
     norm = (values - values.mean()) / values.std()
     return (pd.DataFrame(norm))
 
-df["Epoch"] = normalize_column_mm(df["Epoch"])
-df["HR"] = normalize_column_z(df["HR"].apply(clean_heartrate))
-# df["HR"] = df["HR"].apply(clean_heartrate)
-
-# Drop the "U" data rows, they're not something we need. Not a sleep state, and only 1 row out of all, for subject 1.
-df = df[df["Stage"] != 'U']
-
-print("\n\nNormalized dataframe:\n")
-print(df)
-
-
-# Now, let's make sleep stages numeric labels instead!
-label_encoder = preprocessing.LabelEncoder()
-print(df["Stage"].unique())
-df["Stage"] = label_encoder.fit_transform(df["Stage"])
-print(df["Stage"].unique())
-
-
-# Only keep columns that we need
-df = df[["Epoch", "Stage", "HR"]]
-
 # Clean data, source: https://stackoverflow.com/questions/31323499/sklearn-error-valueerror-input-contains-nan-infinity-or-a-value-too-large-for
 def clean_dataset(df):
     assert isinstance(df, pd.DataFrame), "df needs to be a pd.DataFrame"
@@ -86,15 +65,38 @@ def clean_dataset(df):
     indices_to_keep = ~df.isin([np.nan, np.inf, -np.inf]).any(1)
     return df[indices_to_keep].astype(np.float64)
 
-clean_dataset(df)
+def process_dataset(df):
+    # Process each dataset, so that they are ready for appending into relevant lists
 
-print("\n\nLabel-encoded dataframe:\n")
-print(df)
+    # Only keep columns that we need
+    df = df[["Epoch", "Stage", "HR"]]
+
+    df["Epoch"] = normalize_column_mm(df["Epoch"])
+    df["HR"] = normalize_column_z(df["HR"].apply(clean_heartrate))
+    # df["HR"] = df["HR"].apply(clean_heartrate)
+
+    # Drop the "U" data rows, they're not something we need. Not a sleep state, and only 1 row out of all, for subject 1.
+    df = df[df["Stage"] != 'U']
+
+    # Now, let's make sleep stages numeric labels instead!
+    label_encoder = preprocessing.LabelEncoder()
+    print(df["Stage"].unique())
+    df["Stage"] = label_encoder.fit_transform(df["Stage"])
+    print(df["Stage"].unique())
+
+    clean_dataset(df)
+
+    print("\n\nLabel-encoded dataframe:\n")
+    print(df.head())
+
+    return df
+
+df1 = process_dataset(df1)
 
 
 # Machine Learning!
 # TODO: Construct ???
-train, test = train_test_split(df, test_size = 0.3)
+train, test = train_test_split(df1, test_size = 0.3)
 print(train.shape)
 print(test.shape)
 
