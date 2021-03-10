@@ -30,16 +30,16 @@ Train and predict label on sleep stages
 - Cross-use validation, lecture 5; take a look there! If ML works on every user, 8 users for training, 2 for test.
 '''
 
-df1 = pd.read_excel('./1_2.xlsx')
-df2 = pd.read_excel('./2_2.xlsx')
-df3 = pd.read_excel('./3_2.xlsx')
-df4 = pd.read_excel('./4_2.xlsx')
-df5 = pd.read_excel('./5_2.xlsx')
-df6 = pd.read_excel('./6_2.xlsx')
-df7 = pd.read_excel('./7_2.xlsx')
-df8 = pd.read_excel('./8_2.xlsx')
-df9 = pd.read_excel('./9_2.xlsx')
-df10 = pd.read_excel('./10_2.xlsx')
+df1 = pd.read_excel('./training_data/1_2.xlsx')
+df2 = pd.read_excel('./training_data/2_2.xlsx')
+df3 = pd.read_excel('./training_data/3_2.xlsx')
+df4 = pd.read_excel('./training_data/4_2.xlsx')
+df5 = pd.read_excel('./training_data/5_2.xlsx')
+df6 = pd.read_excel('./training_data/6_2.xlsx')
+df7 = pd.read_excel('./training_data/7_2.xlsx')
+df8 = pd.read_excel('./training_data/8_2.xlsx')
+df9 = pd.read_excel('./training_data/9_2.xlsx')
+df10 = pd.read_excel('./training_data/10_2.xlsx')
 
 # print("\n\nRaw dataframe:\n")
 # print(df)
@@ -131,55 +131,51 @@ test_X = test[["Epoch", "HR"]]
 
 test_Y = test.Stage
 
-# SVM
-model = svm.SVC(gamma="scale")
-
-# model.fit(train_X.values, train_Y.values)
-# prediction = model.predict(test_X.values)
-# print("The accuracy of SVM is: ", metrics.accuracy_score(prediction, test_Y))
-
-model.fit(train_X, train_Y)
-prediction = model.predict(test_X)
-print("The accuracy of SVM is: ", metrics.accuracy_score(prediction, test_Y))
-
-model = LogisticRegression(solver='lbfgs', multi_class="auto")
-model.fit(train_X, train_Y)
-prediction = model.predict(test_X)
-print("The accuracy of Logistic Regression is: ", metrics.accuracy_score(prediction, test_Y))
-
+# KNN (USE THIS MODEL FIRST! If results aren't good then suggest switching to SVM)
 model = KNeighborsClassifier(n_neighbors=3) # this examines 3 neighbors for putting the data into class
 model.fit(train_X, train_Y)
 prediction = model.predict(test_X)
 print('The accuracy of KNN is: ', metrics.accuracy_score(prediction, test_Y))
 
-model = DecisionTreeRegressor()
+# SVM
+model = svm.SVC(gamma="scale")
 model.fit(train_X, train_Y)
 prediction = model.predict(test_X)
-print("The MAE of Decision Tree Regressor is: ", metrics.mean_absolute_error(prediction, test_Y))
+print("The accuracy of SVM is: ", metrics.accuracy_score(prediction, test_Y))
 
-model = RandomForestRegressor(n_estimators = 600, random_state = 0)
-model.fit(train_X, train_Y)
-prediction = model.predict(test_X)
-print("The MAE of SGDRegressor is: ", metrics.mean_absolute_error(prediction, test_Y))
+# model = LogisticRegression(solver='lbfgs', multi_class="auto")
+# model.fit(train_X, train_Y)
+# prediction = model.predict(test_X)
+# print("The accuracy of Logistic Regression is: ", metrics.accuracy_score(prediction, test_Y))
 
-model = svm.SVR(gamma="scale")
-model.fit(train_X, train_Y)
-prediction = model.predict(test_X)
-print("The MAE of SVR is: ", metrics.mean_absolute_error(prediction, test_Y))
+# model = DecisionTreeRegressor()
+# model.fit(train_X, train_Y)
+# prediction = model.predict(test_X)
+# print("The MAE of Decision Tree Regressor is: ", metrics.mean_absolute_error(prediction, test_Y))
 
-model = SGDRegressor()
-model.fit(train_X, train_Y)
-prediction = model.predict(test_X)
-print("The MAE of SGDRegressor is: ", metrics.mean_absolute_error(prediction, test_Y))
+# model = RandomForestRegressor(n_estimators = 600, random_state = 0)
+# model.fit(train_X, train_Y)
+# prediction = model.predict(test_X)
+# print("The MAE of SGDRegressor is: ", metrics.mean_absolute_error(prediction, test_Y))
 
-from sklearn.cluster import KMeans
-model = KMeans(n_clusters = 5)
-model.fit(train_X, train_Y)
-prediction = model.predict(test_X)
-print('The accuracy of KMeans is: ', metrics.accuracy_score(prediction, test_Y))
+# model = svm.SVR(gamma="scale")
+# model.fit(train_X, train_Y)
+# prediction = model.predict(test_X)
+# print("The MAE of SVR is: ", metrics.mean_absolute_error(prediction, test_Y))
 
-from sklearn.naive_bayes import GaussianNB
-model = GaussianNB()
-model.fit(train_X, train_Y)
-prediction = model.predict(test_X)
-print('The accuracy of GaussianNB is: ', metrics.accuracy_score(prediction, test_Y))
+# model = SGDRegressor()
+# model.fit(train_X, train_Y)
+# prediction = model.predict(test_X)
+# print("The MAE of SGDRegressor is: ", metrics.mean_absolute_error(prediction, test_Y))
+
+# from sklearn.cluster import KMeans
+# model = KMeans(n_clusters = 5)
+# model.fit(train_X, train_Y)
+# prediction = model.predict(test_X)
+# print('The accuracy of KMeans is: ', metrics.accuracy_score(prediction, test_Y))
+
+# from sklearn.naive_bayes import GaussianNB
+# model = GaussianNB()
+# model.fit(train_X, train_Y)
+# prediction = model.predict(test_X)
+# print('The accuracy of GaussianNB is: ', metrics.accuracy_score(prediction, test_Y))
