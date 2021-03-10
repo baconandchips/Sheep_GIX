@@ -31,6 +31,15 @@ Train and predict label on sleep stages
 '''
 
 df1 = pd.read_excel('./1_2.xlsx')
+df2 = pd.read_excel('./2_2.xlsx')
+df3 = pd.read_excel('./3_2.xlsx')
+df4 = pd.read_excel('./4_2.xlsx')
+df5 = pd.read_excel('./5_2.xlsx')
+df6 = pd.read_excel('./6_2.xlsx')
+df7 = pd.read_excel('./7_2.xlsx')
+df8 = pd.read_excel('./8_2.xlsx')
+df9 = pd.read_excel('./9_2.xlsx')
+df10 = pd.read_excel('./10_2.xlsx')
 
 # print("\n\nRaw dataframe:\n")
 # print(df)
@@ -74,6 +83,7 @@ def process_dataset(df):
 
     # Drop the "U" data rows, they're not something we need. Not a sleep state, and only 1 row out of all, for subject 1.
     df = df[df["Stage"] != 'U']
+    df = df[df["Stage"] != 'N']
 
     # Only keep columns that we need
     df = df[["Epoch", "Stage", "HR"]]
@@ -87,16 +97,28 @@ def process_dataset(df):
 
     clean_dataset(df)
 
-    print("\nLabel-encoded dataframe:\n")
+    print("\nLabel-encoded dataframe head:\n")
     print(df.head())
 
     return df
 
 df1 = process_dataset(df1)
+df2 = process_dataset(df2)
+df3 = process_dataset(df3)
+df4 = process_dataset(df4)
+df5 = process_dataset(df5)
+df6 = process_dataset(df6)
+df7 = process_dataset(df7)
+df8 = process_dataset(df8)
+df9 = process_dataset(df9)
+df10 = process_dataset(df10)
 
 
 # Machine Learning!
-train, test = train_test_split(df1, test_size = 0.3)
+# Train with 8 peoples' datasets, and then test with 2 of their datasets.
+train = df1.append(df2).append(df3).append(df4).append(df5).append(df6).append(df10).append(df8)
+# train, test = train_test_split(df1, test_size = 0.3)
+test = df9.append(df7)
 print(train.shape)
 print(test.shape)
 
