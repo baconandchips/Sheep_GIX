@@ -116,8 +116,8 @@ df10 = process_dataset(df10)
 
 # Machine Learning!
 # Train with 8 peoples' datasets, and then test with 2 of their datasets.
-# train = df1.append(df2).append(df3).append(df4).append(df5).append(df6).append(df8).append(df9).append(df10)
-# test = df7
+# train = df1.append(df2).append(df3).append(df4).append(df5).append(df6).append(df8).append(df10)
+# test = df7.append(df9)
 df1 = df1.append(df2).append(df3).append(df4).append(df5).append(df6).append(df7).append(df8).append(df9).append(df10)
 train, test = train_test_split(df1, test_size = 0.3)
 
