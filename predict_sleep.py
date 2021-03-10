@@ -68,9 +68,6 @@ def clean_dataset(df):
 def process_dataset(df):
     # Process each dataset, so that they are ready for appending into relevant lists
 
-    # Only keep columns that we need
-    df = df[["Epoch", "Stage", "HR"]]
-
     df["Epoch"] = normalize_column_mm(df["Epoch"])
     df["HR"] = normalize_column_z(df["HR"].apply(clean_heartrate))
     # df["HR"] = df["HR"].apply(clean_heartrate)
@@ -78,6 +75,10 @@ def process_dataset(df):
     # Drop the "U" data rows, they're not something we need. Not a sleep state, and only 1 row out of all, for subject 1.
     df = df[df["Stage"] != 'U']
 
+    # Only keep columns that we need
+    df = df[["Epoch", "Stage", "HR"]]
+
+    print("\nLabels:\n")
     # Now, let's make sleep stages numeric labels instead!
     label_encoder = preprocessing.LabelEncoder()
     print(df["Stage"].unique())
@@ -86,7 +87,7 @@ def process_dataset(df):
 
     clean_dataset(df)
 
-    print("\n\nLabel-encoded dataframe:\n")
+    print("\nLabel-encoded dataframe:\n")
     print(df.head())
 
     return df
@@ -95,7 +96,6 @@ df1 = process_dataset(df1)
 
 
 # Machine Learning!
-# TODO: Construct ???
 train, test = train_test_split(df1, test_size = 0.3)
 print(train.shape)
 print(test.shape)
