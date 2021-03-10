@@ -116,9 +116,11 @@ df10 = process_dataset(df10)
 
 # Machine Learning!
 # Train with 8 peoples' datasets, and then test with 2 of their datasets.
-train = df1.append(df2).append(df3).append(df4).append(df5).append(df6).append(df10).append(df8)
-# train, test = train_test_split(df1, test_size = 0.3)
-test = df9.append(df7)
+# train = df1.append(df2).append(df3).append(df4).append(df5).append(df6).append(df8).append(df9).append(df10)
+# test = df7
+df1 = df1.append(df2).append(df3).append(df4).append(df5).append(df6).append(df7).append(df8).append(df9).append(df10)
+train, test = train_test_split(df1, test_size = 0.3)
+
 print(train.shape)
 print(test.shape)
 
@@ -128,12 +130,6 @@ train_Y = train.Stage # Output
 test_X = test[["Epoch", "HR"]]
 
 test_Y = test.Stage
-# print("Test X and Test Y")
-# print(test_X)
-# print(test_Y)
-
-# print(train_X.head())
-# print(test_Y.head())
 
 # SVM
 model = svm.SVC(gamma="scale")
@@ -175,3 +171,15 @@ model = SGDRegressor()
 model.fit(train_X, train_Y)
 prediction = model.predict(test_X)
 print("The MAE of SGDRegressor is: ", metrics.mean_absolute_error(prediction, test_Y))
+
+from sklearn.cluster import KMeans
+model = KMeans(n_clusters = 5)
+model.fit(train_X, train_Y)
+prediction = model.predict(test_X)
+print('The accuracy of KMeans is: ', metrics.accuracy_score(prediction, test_Y))
+
+from sklearn.naive_bayes import GaussianNB
+model = GaussianNB()
+model.fit(train_X, train_Y)
+prediction = model.predict(test_X)
+print('The accuracy of GaussianNB is: ', metrics.accuracy_score(prediction, test_Y))
